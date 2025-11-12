@@ -96,11 +96,11 @@ The `vercel.json` file in `apps/web/` is pre-configured for optimal deployment:
 
 ```json
 {
-  "buildCommand": "cd ../.. && pnpm build --filter=@pdfcraft/web",
-  "devCommand": "cd ../.. && pnpm dev --filter=@pdfcraft/web",
+  "buildCommand": "cd ../.. && pnpm --filter @pdfcraft/web build",
+  "devCommand": "cd ../.. && pnpm --filter @pdfcraft/web dev",
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
-  "outputDirectory": "apps/web/.next"
+  "outputDirectory": ".next"
 }
 ```
 
