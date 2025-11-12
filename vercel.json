@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd ../.. && pnpm build --filter=@pdfcraft/web",
+  "devCommand": "cd ../.. && pnpm dev --filter=@pdfcraft/web",
+  "installCommand": "cd ../.. && pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next"
+}
