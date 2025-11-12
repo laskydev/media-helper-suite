@@ -81,6 +81,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@pdfcraft/pdf-engine':
+        specifier: workspace:*
+        version: link:../../packages/pdf-engine
       '@pdfcraft/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -142,6 +145,28 @@ importers:
       tailwindcss:
         specifier: ^3.4.0
         version: 3.4.18
+
+  packages/pdf-engine:
+    dependencies:
+      '@pdfcraft/types':
+        specifier: workspace:*
+        version: link:../types
+      pdf-lib:
+        specifier: ^1.17.1
+        version: 1.17.1
+    devDependencies:
+      '@pdfcraft/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: ^20.10.4
+        version: 20.19.25
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.1.0
+        version: 1.6.1(@types/node@20.19.25)
 
   packages/types:
     dependencies:

@@ -1,0 +1,25 @@
+{
+  "name": "@pdfcraft/pdf-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client-side PDF processing engine with WebAssembly support",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@pdfcraft/types": "workspace:*",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@pdfcraft/config": "workspace:*",
+    "@types/node": "^20.10.4",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
+  }
+}

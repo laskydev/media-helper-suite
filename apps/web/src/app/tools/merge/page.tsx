@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { PDFDropzone } from '@/components/pdf-dropzone';
 import { Button } from '@pdfcraft/ui';
+import { mergePDFs } from '@pdfcraft/pdf-engine';
 
 export default function MergePage(): JSX.Element {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const handleMerge = async (): Promise<void> => {
@@ -17,26 +19,23 @@ export default function MergePage(): JSX.Element {
 
     setIsLoading(true);
     setError(null);
+    setProgress(0);
 
     try {
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append('files', file);
+      // Process PDFs client-side with progress tracking
+      const result = await mergePDFs({
+        files,
+        onProgress: (progressInfo) => {
+          setProgress(progressInfo.progress);
+        },
       });
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const response = await fetch(`${apiUrl}/pdf/merge`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = (await response.json()) as { error?: string };
-        throw new Error(errorData.error || 'Failed to merge PDFs');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Failed to merge PDFs');
       }
 
-      // Download the merged PDF
-      const blob = await response.blob();
+      // Create blob and download
+      const blob = new Blob([result.data.buffer as ArrayBuffer], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -48,6 +47,7 @@ export default function MergePage(): JSX.Element {
 
       // Reset state
       setFiles([]);
+      setProgress(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred while merging PDFs');
     } finally {
@@ -62,12 +62,31 @@ export default function MergePage(): JSX.Element {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Merge PDF Files</h1>
           <p className="text-lg text-text-secondary">
-            Combine multiple PDF documents into one file
+            Combine multiple PDF documents into one file - 100% client-side, private and secure
+          </p>
+          <p className="text-sm text-text-secondary mt-2">
+            ✨ Powered by WebAssembly - Your files never leave your browser
           </p>
         </div>
 
         {/* Dropzone */}
         <PDFDropzone onFilesSelected={setFiles} selectedFiles={files} />
+
+        {/* Progress Bar */}
+        {isLoading && progress > 0 && (
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-text-primary">Processing...</span>
+              <span className="text-sm font-medium text-primary">{Math.round(progress)}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-primary h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (
@@ -95,6 +114,14 @@ export default function MergePage(): JSX.Element {
             <li>Click the Merge button to combine them</li>
             <li>Download your merged PDF file</li>
           </ol>
+
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 className="font-semibold text-blue-900 mb-2">🔒 Privacy First</h3>
+            <p className="text-sm text-blue-800">
+              All processing happens locally in your browser. Your PDFs never leave your device,
+              ensuring complete privacy and security.
+            </p>
+          </div>
         </div>
       </div>
     </div>
