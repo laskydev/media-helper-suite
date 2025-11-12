@@ -39,7 +39,7 @@ Vercel is the recommended platform for PDFCraft because:
    Vercel should auto-detect the monorepo structure, but verify these settings:
    - **Framework Preset**: Next.js
    - **Root Directory**: `apps/web`
-   - **Build Command**: `cd ../.. && pnpm install && pnpm build --filter=@pdfcraft/web`
+   - **Build Command**: `cd ../.. && pnpm --filter @pdfcraft/web build`
    - **Install Command**: `cd ../.. && pnpm install`
    - **Output Directory**: `.next`
 
@@ -113,7 +113,7 @@ The `vercel.json` file in `apps/web/` is pre-configured for optimal deployment:
    ```toml
    [build]
      base = "apps/web"
-     command = "cd ../.. && pnpm install && pnpm build --filter=@pdfcraft/web"
+     command = "cd ../.. && pnpm install && pnpm --filter @pdfcraft/web build"
      publish = "apps/web/.next"
 
    [build.environment]
